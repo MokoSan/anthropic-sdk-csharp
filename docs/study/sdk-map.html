@@ -1,0 +1,439 @@
+<title>Anthropic C# SDK Map</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Schibsted+Grotesk:wght@600;700;800&display=swap">
+<style>
+/* Layout: a reference manual — sticky contents rail on the left, one reading column, layer-stack diagram up top */
+:root {
+  --bg: #f4f6f5;
+  --surface: #ffffff;
+  --sunken: #e9eeec;
+  --ink: #15211f;
+  --muted: #55625f;
+  --line: #d3dbd8;
+  --accent: #0e6a74;
+  --accent-soft: #d6ebec;
+  --beta: #8a4f9e;
+  --beta-soft: #f0e4f4;
+  --code-bg: #10191a;
+  --code-ink: #d9e4e2;
+  --k: #7fd1d9; --s: #e8c37b; --t: #b9a2f0; --c: #6f8a87; --n: #f29e8e; --f: #9bd67f;
+  --display: "Schibsted Grotesk", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f1615; --surface: #162120; --sunken: #1c2a28; --ink: #e3ecea; --muted: #94a6a2; --line: #2b3b39;
+  --accent: #5cc3cd; --accent-soft: #173a3d; --beta: #d19be3; --beta-soft: #34233b;
+  --code-bg: #0a1010; --code-ink: #d9e4e2; color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #0f1615; --surface: #162120; --sunken: #1c2a28; --ink: #e3ecea; --muted: #94a6a2; --line: #2b3b39;
+  --accent: #5cc3cd; --accent-soft: #173a3d; --beta: #d19be3; --beta-soft: #34233b;
+  --code-bg: #0a1010; --code-ink: #d9e4e2; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15.5px/1.6 var(--body); }
+.wrap {
+  max-width: 1180px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 40px 80px;
+  display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 48px;
+}
+nav.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 24px); align-self: start; font-size: 13.5px; }
+nav.toc .label { font: 600 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+nav.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; counter-reset: s; }
+nav.toc a { display: flex; gap: 10px; padding: 5px 8px; border-radius: 6px; color: var(--ink); text-decoration: none; }
+nav.toc a::before { counter-increment: s; content: counter(s, decimal-leading-zero); font: 500 11.5px/1.9 var(--mono); color: var(--muted); }
+nav.toc a:hover, nav.toc a:focus-visible { background: var(--sunken); outline: none; }
+main { min-width: 0; }
+header.hero { padding-bottom: 28px; border-bottom: 1px solid var(--line); margin-bottom: 36px; }
+.eyebrow { font: 500 12px/1 var(--mono); color: var(--accent); letter-spacing: .04em; }
+h1 { font: 800 clamp(30px, 5vw, 46px)/1.05 var(--display); letter-spacing: -.02em; margin: 12px 0 14px; text-wrap: balance; }
+.lede { font-size: 17px; color: var(--muted); max-width: 66ch; margin: 0; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 18px; font: 400 12.5px/1.4 var(--mono); color: var(--muted); }
+.meta b { color: var(--ink); font-weight: 500; }
+section { padding-block: 8px 30px; scroll-margin-top: 20px; }
+h2 { font: 700 25px/1.2 var(--display); letter-spacing: -.01em; margin: 18px 0 10px; text-wrap: balance; }
+h3 { font: 600 16px/1.3 var(--body); margin: 26px 0 8px; }
+p { max-width: 70ch; margin: 0 0 12px; }
+code { font-family: var(--mono); font-size: .88em; background: var(--sunken); padding: 1px 5px; border-radius: 4px; }
+a { color: var(--accent); }
+.path { font: 400 12px/1.4 var(--mono); color: var(--muted); }
+.path::before { content: "↳ "; }
+pre { margin: 12px 0 16px; background: var(--code-bg); color: var(--code-ink); border-radius: 10px; padding: 16px 18px; overflow-x: auto; font: 13px/1.55 var(--mono); }
+pre code { background: none; padding: 0; font-size: inherit; color: inherit; }
+.hljs-keyword, .hljs-built_in, .hljs-literal { color: var(--k); }
+.hljs-string { color: var(--s); }
+.hljs-title, .hljs-type, .hljs-title.class_ { color: var(--t); }
+.hljs-comment { color: var(--c); font-style: italic; }
+.hljs-number { color: var(--n); }
+.hljs-title.function_, .hljs-function .hljs-title { color: var(--f); }
+.tag { display: inline-block; font: 600 10.5px/1 var(--mono); letter-spacing: .05em; text-transform: uppercase; padding: 4px 6px; border-radius: 4px; vertical-align: 2px; background: var(--accent-soft); color: var(--accent); }
+.tag.beta { background: var(--beta-soft); color: var(--beta); }
+
+/* Layer stack */
+.stack { display: grid; gap: 10px; margin: 22px 0 8px; }
+.layer { display: grid; grid-template-columns: 140px minmax(0,1fr); gap: 14px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+.layer .lname { font: 600 11px/1.3 var(--mono); text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+.layer .lname small { display: block; text-transform: none; letter-spacing: 0; font-weight: 400; margin-top: 3px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 500 12.5px/1 var(--mono); padding: 6px 8px; border-radius: 6px; background: var(--sunken); color: var(--ink); white-space: nowrap; }
+.chip.hot { background: var(--accent); color: var(--surface); }
+.chip.beta { background: var(--beta-soft); color: var(--beta); }
+.layer.client { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.arrow { text-align: center; font: 400 11.5px/1 var(--mono); color: var(--muted); }
+
+/* Tables & trees */
+.tbl { overflow-x: auto; margin: 12px 0 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 600 11px/1.2 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: var(--sunken); }
+tr:last-child td { border-bottom: 0; }
+td code { white-space: nowrap; }
+.tree { font: 13px/1.75 var(--mono); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; overflow-x: auto; white-space: pre; margin: 12px 0 18px; }
+.tree .d { color: var(--muted); }
+.tree .b { color: var(--beta); }
+.tree .a { color: var(--accent); font-weight: 600; }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin: 14px 0; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; min-width: 0; }
+.card h4 { margin: 0 0 6px; font: 600 14px/1.3 var(--mono); }
+.card p { font-size: 14px; color: var(--muted); margin: 0; }
+.note { border-left: 3px solid var(--accent); background: var(--surface); padding: 10px 14px; border-radius: 0 8px 8px 0; font-size: 14.5px; max-width: 72ch; margin: 14px 0; }
+.note b { font-weight: 600; }
+
+@media (max-width: 860px) {
+  .wrap { grid-template-columns: minmax(0,1fr); gap: 0; padding-block: 24px 60px; }
+  nav.toc { position: static; margin-bottom: 24px; }
+  nav.toc ol { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .layer { grid-template-columns: minmax(0,1fr); gap: 8px; }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+
+<div class="wrap">
+  <nav class="toc" aria-label="Contents">
+    <div class="label">Contents</div>
+    <ol>
+      <li><a href="#shape">The shape</a></li>
+      <li><a href="#client">AnthropicClient</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#models">Params &amp; models</a></li>
+      <li><a href="#unions">Unions &amp; enums</a></li>
+      <li><a href="#streaming">Streaming</a></li>
+      <li><a href="#raw">Raw responses &amp; paging</a></li>
+      <li><a href="#helpers">Helpers</a></li>
+      <li><a href="#errors">Exceptions</a></li>
+      <li><a href="#creds">Credentials</a></li>
+      <li><a href="#platforms">Platform packages</a></li>
+      <li><a href="#beta">Stable vs Beta</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <div class="eyebrow">anthropics/anthropic-sdk-csharp · src/</div>
+      <h1>Anthropic C# SDK, top-level constructs</h1>
+      <p class="lede">A guided map of the public surface: the client you construct, the services hanging off it, the request and response types they trade in, and the helpers, errors and platform clients built around them. Every snippet below is taken from, or checked against, the cloned repo.</p>
+      <div class="meta">
+        <span>commit <b>2a7781f8</b></span>
+        <span>targets <b>net8.0 · net9.0 · netstandard2.0</b></span>
+        <span>install <b>dotnet add package Anthropic</b></span>
+      </div>
+    </header>
+
+    <section id="shape">
+      <h2>The shape at a glance</h2>
+      <p>Almost everything follows one path: build a <code>*Params</code> record, hand it to a method on a service reached through the client, get back a typed model. The layers, top to bottom:</p>
+
+      <div class="stack" role="img" aria-label="Layer diagram of the SDK">
+        <div class="layer">
+          <div class="lname">Platform clients<small>subclass the client</small></div>
+          <div class="chips"><span class="chip">AnthropicBedrockClient</span><span class="chip">AnthropicBedrockMantleClient</span><span class="chip">AnthropicVertexClient</span><span class="chip">AnthropicFoundryClient</span><span class="chip">AnthropicAwsClient</span><span class="chip">AnthropicGoogleCloudClient</span></div>
+        </div>
+        <div class="arrow">inherits ↓</div>
+        <div class="layer client">
+          <div class="lname">Client<small>Anthropic namespace</small></div>
+          <div class="chips"><span class="chip hot">AnthropicClient : IAnthropicClient</span><span class="chip">ClientOptions</span><span class="chip">WithOptions()</span><span class="chip">WithRawResponse</span></div>
+        </div>
+        <div class="arrow">exposes ↓</div>
+        <div class="layer">
+          <div class="lname">Services<small>Anthropic.Services</small></div>
+          <div class="chips"><span class="chip">Messages</span><span class="chip">Models</span><span class="chip">Files</span><span class="chip">Skills</span><span class="chip">UserProfiles</span><span class="chip">Organization</span><span class="chip beta">Beta.*</span></div>
+        </div>
+        <div class="arrow">take Params, return Models ↓</div>
+        <div class="layer">
+          <div class="lname">Models<small>Anthropic.Models.*</small></div>
+          <div class="chips"><span class="chip">MessageCreateParams : ParamsBase</span><span class="chip">Message : JsonModel</span><span class="chip">ContentBlock (union)</span><span class="chip">ApiEnum&lt;TRaw,TEnum&gt;</span><span class="chip">IPage&lt;T&gt;</span></div>
+        </div>
+        <div class="arrow">built on ↓</div>
+        <div class="layer">
+          <div class="lname">Core<small>Anthropic.Core</small></div>
+          <div class="chips"><span class="chip">RetryingExecutor</span><span class="chip">Sse</span><span class="chip">ModelBase</span><span class="chip">HttpResponse&lt;T&gt;</span><span class="chip">Tracing</span><span class="chip">Anthropic.Exceptions</span><span class="chip">Anthropic.Credentials</span></div>
+        </div>
+        <div class="layer">
+          <div class="lname">Helpers<small>alongside, opt-in</small></div>
+          <div class="chips"><span class="chip">Aggregate()</span><span class="chip">Messages.Create&lt;T&gt;</span><span class="chip beta">BetaToolRunner</span><span class="chip beta">BetaMessageThread</span><span class="chip beta">BetaRefusalFallbackHandler</span><span class="chip">AsIChatClient()</span></div>
+        </div>
+      </div>
+
+      <pre><code class="language-csharp">using Anthropic;
+using Anthropic.Models.Messages;
+
+// Reads ANTHROPIC_API_KEY / ANTHROPIC_AUTH_TOKEN / ANTHROPIC_BASE_URL
+var client = new AnthropicClient();
+
+Message response = await client.Messages.Create(new MessageCreateParams
+{
+    Model = Model.ClaudeOpus5_5,
+    MaxTokens = 2048,
+    Messages = [new UserMessageParam { Content = "Hello, Claude" }],
+});
+
+foreach (var block in response.Content)
+    if (block.TryPickText(out var text)) Console.Write(text.Text);</code></pre>
+    </section>
+
+    <section id="client">
+      <h2>AnthropicClient</h2>
+      <div class="path">src/Anthropic/AnthropicClient.cs · IAnthropicClient.cs · Core/ClientOptions.cs</div>
+      <p>The single entry point. <code>AnthropicClient</code> implements <code>IAnthropicClient</code> (use the interface for DI and mocking) and is <code>IDisposable</code> because it owns an <code>HttpClient</code>. The parameterless constructor resolves credentials and base URL from the environment; the <code>ClientOptions</code> overload takes them explicitly.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>Member</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>ApiKey</code>, <code>AuthToken</code></td><td>Sent as <code>x-api-key</code> or <code>Authorization: Bearer</code>. Default from env vars.</td></tr>
+          <tr><td><code>BaseUrl</code></td><td>Defaults to the first-party API, or <code>ANTHROPIC_BASE_URL</code>.</td></tr>
+          <tr><td><code>MaxRetries</code>, <code>Timeout</code></td><td>Defaults 2 retries and 10 minutes (<code>ClientOptions.DefaultMaxRetries</code>, <code>DefaultTimeout</code>). Retries cover 408/409/429/5xx and I/O failures.</td></tr>
+          <tr><td><code>Handlers</code></td><td>A list of <code>DelegatingHandler</code>s spliced into the HTTP pipeline. This is how middleware such as the refusal-fallback handler plugs in.</td></tr>
+          <tr><td><code>ResponseValidation</code></td><td>When true, every response model is <code>Validate()</code>d eagerly. Off by default.</td></tr>
+          <tr><td><code>OpenTelemetry</code></td><td>Opt-in tracing spans via <code>OpenTelemetryOptions</code>.</td></tr>
+          <tr><td><code>WithOptions(o =&gt; …)</code></td><td>Returns a new client sharing the transport, with a modified <code>ClientOptions</code>. Every service has the same method for per-call overrides.</td></tr>
+          <tr><td><code>WithRawResponse</code></td><td>A parallel client whose methods return <code>HttpResponse&lt;T&gt;</code> instead of the model (see §7).</td></tr>
+        </tbody>
+      </table></div>
+      <p><code>ClientOptions</code> is a <code>record struct</code>, so the <code>WithOptions</code> modifier works with <code>with</code> expressions:</p>
+      <pre><code class="language-csharp">var patient = client.WithOptions(o =&gt; o with
+{
+    Timeout = TimeSpan.FromMinutes(30),
+    MaxRetries = 5,
+});</code></pre>
+    </section>
+
+    <section id="services">
+      <h2>Services</h2>
+      <div class="path">src/Anthropic/Services/ · Services/Beta/ · Services/Organization/</div>
+      <p>Each API resource is an interface/implementation pair (<code>IMessageService</code> / <code>MessageService</code>), and nested resources hang off their parent as properties. Every service also has a <code>…WithRawResponse</code> twin. The full tree reachable from the client:</p>
+<div class="tree"><span class="a">client</span>
+├─ Messages        <span class="d">Create · CreateStreaming · CountTokens</span>
+│  └─ Batches     <span class="d">Create · Retrieve · List · Cancel · Results …</span>
+├─ Models          <span class="d">Retrieve · List</span>
+├─ Files
+├─ Skills
+├─ UserProfiles
+├─ Organization    <span class="d">ApiKeys · Invites · Users · Workspaces · Analytics · Federation …</span>
+└─ <span class="b">Beta</span>
+   ├─ <span class="b">Messages</span>     <span class="d">Create · CreateStreaming · CountTokens · ToolRunner · Thread · Batches</span>
+   ├─ <span class="b">Agents · Environments · Sessions · Deployments · DeploymentRuns</span>  <span class="d">Managed Agents</span>
+   ├─ <span class="b">Vaults · MemoryStores · Dreams · Tunnels · Webhooks</span>
+   └─ <span class="b">Models · Files · Skills · UserProfiles · Organization</span></div>
+      <p>Method naming is regular: <code>Create</code>, <code>Retrieve</code>, <code>Update</code>, <code>List</code>, <code>Delete</code>, plus a <code>…Streaming</code> suffix for SSE endpoints (which return <code>IAsyncEnumerable&lt;T&gt;</code> rather than <code>Task&lt;T&gt;</code>). All methods take an optional <code>CancellationToken</code>.</p>
+    </section>
+
+    <section id="models">
+      <h2>Params &amp; models</h2>
+      <div class="path">src/Anthropic/Models/ · Core/ParamsBase.cs · Core/JsonModel.cs · Core/ModelBase.cs</div>
+      <p>Namespaces mirror the API: <code>Anthropic.Models.Messages</code> (392 files), <code>Anthropic.Models.Files</code>, <code>Anthropic.Models.Beta.Messages</code>, <code>Anthropic.Models.Beta.Sessions</code>, and so on. Two base types matter:</p>
+      <div class="cols">
+        <div class="card"><h4>ParamsBase</h4><p>Request records such as <code>MessageCreateParams</code>. Carries the body plus path, query and header parameters. Use object initialisers with <code>required init</code> properties.</p></div>
+        <div class="card"><h4>JsonModel : ModelBase</h4><p>Response and nested types such as <code>Message</code>, <code>Usage</code>, <code>TextBlock</code>. Immutable <code>record class</code>es backed by the raw JSON, exposed as <code>RawData</code>. <code>Validate()</code> checks required fields.</p></div>
+      </div>
+      <p>Because models keep the raw JSON, fields the SDK version does not know about survive a round trip. When you relay API output back into a request, pass the model through rather than rebuilding it from typed properties.</p>
+      <div class="note"><b>Immutable by design.</b> Build a request once, then use <code>with</code> for variations: <code>var next = parameters with { MaxTokens = 4096 };</code>. On spec-nullable properties (<code>CacheControl</code>, <code>Container</code>, <code>ContextManagement</code>), assigning <code>null</code> sends <code>"prop": null</code> rather than omitting it.</div>
+    </section>
+
+    <section id="unions">
+      <h2>Unions &amp; enums</h2>
+      <div class="path">Models/Messages/ContentBlock.cs · Core/ApiEnum.cs</div>
+      <h3>Discriminated unions</h3>
+      <p>C# has no native sum type, so polymorphic API fields are generated as union classes. <code>ContentBlock</code> can hold a <code>TextBlock</code>, <code>ThinkingBlock</code>, <code>ToolUseBlock</code>, <code>ServerToolUseBlock</code>, <code>WebSearchToolResultBlock</code> and seven more. Each union offers four ways in:</p>
+      <pre><code class="language-csharp">// 1. Try-pattern, one variant at a time
+if (block.TryPickToolUse(out var toolUse)) Run(toolUse.Name, toolUse.Input);
+
+// 2. Exhaustive callback per variant
+block.Switch(text =&gt; …, thinking =&gt; …, redacted =&gt; …, toolUse =&gt; …, /* … */);
+
+// 3. Exhaustive projection
+string kind = block.Match(text =&gt; "text", thinking =&gt; "thinking", /* … */);
+
+// 4. Raw object for LINQ / pattern matching
+var texts = response.Content.Select(b =&gt; b.Value).OfType&lt;TextBlock&gt;();</code></pre>
+      <p>The same shape is used everywhere: stream events (<code>RawMessageStreamEvent.TryPickContentBlockDelta</code>), deltas (<code>TryPickText</code>, <code>TryPickThinking</code>), tool definitions (<code>ToolUnion</code>), and Managed Agents events (<code>TryPickSessionStatusIdleEvent</code>). Unions also have implicit conversions from each variant, so you rarely write <code>new ContentBlock(...)</code>.</p>
+      <h3>Open enums: <code>ApiEnum&lt;TRaw, TEnum&gt;</code></h3>
+      <p>Enum-valued fields like <code>Message.StopReason</code> are typed <code>ApiEnum&lt;string, StopReason&gt;</code> so that values added to the API later do not break deserialisation.</p>
+      <pre><code class="language-csharp">if (response.StopReason?.Value() == StopReason.ToolUse) { … }   // typed compare
+string wire = response.StopReason!.Raw();                         // "tool_use"
+Model = Model.ClaudeOpus5_5,     // implicit from the C# enum
+Model = "claude-opus-5-5",       // or from the raw string</code></pre>
+      <div class="note"><b>Gotcha.</b> <code>ToString()</code> on models and enums returns JSON (quotes included). Compare with <code>.Value()</code> or <code>.Raw()</code>, never <code>ToString()</code>.</div>
+    </section>
+
+    <section id="streaming">
+      <h2>Streaming</h2>
+      <div class="path">Core/Sse.cs · Helpers/SseAggregator.cs · Helpers/MessageContentAggregator.cs · SseAggregatorExtensions.cs</div>
+      <p><code>CreateStreaming</code> returns a lazy <code>IAsyncEnumerable&lt;RawMessageStreamEvent&gt;</code>. The request is sent when you start enumerating, and enumerating it twice sends two requests.</p>
+      <pre><code class="language-csharp">await foreach (var ev in client.Messages.CreateStreaming(parameters))
+    if (ev.TryPickContentBlockDelta(out var d) &amp;&amp; d.Delta.TryPickText(out var t))
+        Console.Write(t.Text);</code></pre>
+      <p>Two helpers fold events back into a complete <code>Message</code>, the same type a non-streaming call returns:</p>
+      <pre><code class="language-csharp">// Whole stream → one Message
+Message message = await client.Messages.CreateStreaming(parameters).Aggregate();
+
+// Live events AND the final Message
+var aggregator = new MessageContentAggregator();
+await foreach (var ev in client.Messages.CreateStreaming(parameters).CollectAsync(aggregator))
+    { /* render deltas */ }
+Message final = aggregator.Message();</code></pre>
+      <p>Beta has mirrors: <code>BetaMessageContentAggregator</code>, and <code>BetaManagedAgentsEventAggregator</code> for session event streams.</p>
+    </section>
+
+    <section id="raw">
+      <h2>Raw responses &amp; pagination</h2>
+      <div class="path">Core/HttpResponse.cs · Core/IPage.cs · IPageExtensions.cs</div>
+      <h3>WithRawResponse</h3>
+      <p>Any call can go through <code>client.WithRawResponse</code> to get an <code>HttpResponse&lt;T&gt;</code>: status, headers, <code>RequestID</code>, <code>WorkspaceID</code>, and a lazy <code>Deserialize()</code>. Streaming calls return <code>StreamingHttpResponse&lt;T&gt;</code>.</p>
+      <pre><code class="language-csharp">using var raw = await client.WithRawResponse.Messages.Create(parameters);
+Console.WriteLine(raw.RequestID);
+Message message = await raw.Deserialize();</code></pre>
+      <h3>IPage&lt;T&gt;</h3>
+      <p>List endpoints return a page type (<code>ModelListPage</code>, …) implementing <code>IPage&lt;T&gt;</code> with <code>Items</code>, <code>HasNext()</code> and <code>Next()</code>. The <code>Paginate()</code> extension walks all pages as an async stream:</p>
+      <pre><code class="language-csharp">var page = await client.Models.List();
+await foreach (var model in page.Paginate())
+    Console.WriteLine(model.ID);</code></pre>
+    </section>
+
+    <section id="helpers">
+      <h2>Helpers</h2>
+      <div class="path">src/Anthropic/Helpers/ · Helpers/Beta/ · AnthropicClientExtensions.cs · src/Anthropic.Mcp/</div>
+      <p>Hand-written conveniences layered over the generated surface. <code>Anthropic.Helpers</code> and <code>Anthropic.Helpers.Beta</code> are the namespaces to import.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>Construct</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>Messages.Create&lt;T&gt;(…)</code> <span class="tag">stable</span></td><td>Structured output. Infers a JSON schema from <code>T</code> (tunable with <code>[SchemaClass]</code>/<code>[SchemaProperty]</code>), returns <code>StructuredMessage&lt;T&gt;</code>; call <code>.Content[0].Parsed()</code>.</td></tr>
+          <tr><td><code>BetaToolRunner</code> <span class="tag beta">beta</span></td><td>The agent loop. <code>client.Beta.Messages.ToolRunner(params, tools)</code> is an <code>IAsyncEnumerable&lt;BetaMessage&gt;</code>, one item per turn, running tools until the model stops. Mutate mid-run with <code>SetParams</code>, <code>PushMessages</code>, <code>AddTools</code>, <code>RemoveTools</code>, <code>CompactBeforeNextTurn</code>.</td></tr>
+          <tr><td><code>BetaRunnableTool</code> <span class="tag beta">beta</span></td><td>A tool = a <code>BetaTool</code> definition plus a <code>Run</code> delegate. Throw <code>BetaToolError</code> to return <code>is_error: true</code> to the model.</td></tr>
+          <tr><td><code>BetaAbstractMemoryTool</code> <span class="tag beta">beta</span></td><td>Base class for implementing the memory tool's storage backend.</td></tr>
+          <tr><td><code>BetaMessageThread</code> <span class="tag beta">beta</span></td><td><code>client.Beta.Messages.Thread(params)</code> keeps conversation state server-side. <code>Send</code>, <code>SendStreaming</code>, <code>Fork</code>, typed <code>Thread&lt;T&gt;</code>.</td></tr>
+          <tr><td><code>BetaRefusalFallbackHandler</code> + <code>BetaFallbackState</code> <span class="tag beta">beta</span></td><td>Client-side retry on another model when a request is refused. Added through <code>Handlers</code>; used where server-side <code>Fallbacks</code> isn't available.</td></tr>
+          <tr><td><code>AsIChatClient(model)</code> <span class="tag">stable</span></td><td>Adapts the client to <code>Microsoft.Extensions.AI.IChatClient</code>, so MEAI pipelines (function invocation, caching, logging) work unchanged. Also <code>AsIHostedFileClient()</code> and <code>ToolUnion.AsAITool()</code>.</td></tr>
+          <tr><td><code>BetaMcp</code> <span class="tag beta">beta</span></td><td>In <code>Anthropic.Mcp</code>: <code>ListToolsAsync</code> / <code>Tools</code> turn an MCP client's tools into <code>IBetaRunnableTool</code>s for the tool runner.</td></tr>
+        </tbody>
+      </table></div>
+      <pre><code class="language-csharp">var weather = new BetaRunnableTool
+{
+    Name = "get_weather",
+    Definition = new BetaTool { Name = "get_weather", Description = "…", InputSchema = schema },
+    Run = (toolUse, ct) =&gt; Task.FromResult&lt;BetaToolResultBlockParamContent&gt;("18°C, cloudy"),
+};
+
+var runner = client.Beta.Messages.ToolRunner(new MessageCreateParams
+{
+    Model = Anthropic.Models.Messages.Model.ClaudeOpus5_5,
+    MaxTokens = 1024,
+    Messages = [new BetaUserMessageParam { Content = "Weather in Paris?" }],
+}, [weather]);
+
+await foreach (BetaMessage turn in runner)
+    Console.WriteLine(turn.StopReason);</code></pre>
+    </section>
+
+    <section id="errors">
+      <h2>Exceptions</h2>
+      <div class="path">src/Anthropic/Exceptions/ · Exceptions/AnthropicExceptionFactory.cs</div>
+      <p>Everything the SDK throws on its own behalf derives from <code>AnthropicException</code>. HTTP status codes map to concrete subclasses through <code>AnthropicExceptionFactory</code>, so you can catch from most to least specific:</p>
+<div class="tree"><span class="a">AnthropicException</span>
+├─ AnthropicServiceException            <span class="d">service reported an error · .ErrorType</span>
+│  ├─ AnthropicApiException             <span class="d">non-2xx · .StatusCode · .ResponseBody</span>
+│  │  ├─ AnthropicBadRequestException          <span class="d">400</span>
+│  │  ├─ AnthropicUnauthorizedException        <span class="d">401</span>
+│  │  ├─ AnthropicForbiddenException           <span class="d">403</span>
+│  │  ├─ AnthropicNotFoundException            <span class="d">404</span>
+│  │  ├─ AnthropicUnprocessableEntityException <span class="d">422</span>
+│  │  ├─ AnthropicRateLimitException           <span class="d">429</span>
+│  │  ├─ Anthropic4xxException / Anthropic5xxException  <span class="d">other ranges</span>
+│  │  └─ AnthropicUnexpectedStatusCodeException
+│  └─ AnthropicSseException             <span class="d">error event inside a 200 stream</span>
+├─ AnthropicIOException                 <span class="d">transport failure · retryable</span>
+├─ AnthropicInvalidDataException        <span class="d">JSON won't fit the model · failed Validate()</span>
+└─ WorkloadIdentityException …          <span class="d">feature-specific</span></div>
+      <p>Outside the family by design: <code>ArgumentException</code> for bad arguments, <code>NotSupportedException</code> for operations a platform client can't offer, and <code>OperationCanceledException</code> for cancellation and timeouts.</p>
+      <pre><code class="language-csharp">try { await client.Messages.Create(parameters); }
+catch (AnthropicRateLimitException e) { /* back off; e.ResponseBody */ }
+catch (AnthropicApiException e) when ((int)e.StatusCode &gt;= 500) { /* retry later */ }
+catch (AnthropicIOException) { /* network */ }</code></pre>
+    </section>
+
+    <section id="creds">
+      <h2>Credentials</h2>
+      <div class="path">src/Anthropic/Credentials/ · Core/ClientOptions.cs</div>
+      <p>The no-arg constructor looks for credentials in this order, first match wins:</p>
+      <div class="tbl"><table>
+        <thead><tr><th>#</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><code>ANTHROPIC_API_KEY</code></td></tr>
+          <tr><td>2</td><td><code>ANTHROPIC_AUTH_TOKEN</code></td></tr>
+          <tr><td>3</td><td>The active or <code>ANTHROPIC_PROFILE</code>-selected profile written by <code>ant auth login</code> (<code>CredentialsFileProvider</code>)</td></tr>
+          <tr><td>4</td><td>Workload Identity Federation env vars (<code>WorkloadIdentityCredentials</code>), which exchange a JWT for an access token and refresh it</td></tr>
+        </tbody>
+      </table></div>
+      <p>To supply your own, set <code>ClientOptions.Credentials</code> to any <code>IAccessTokenProvider</code>. <code>StaticTokenCredentials</code>, <code>WorkloadIdentityCredentials</code> and <code>AnthropicCredentials</code> are the built-in implementations; <code>TokenCache</code> handles refresh.</p>
+    </section>
+
+    <section id="platforms">
+      <h2>Platform packages</h2>
+      <div class="path">src/Anthropic.Bedrock · Anthropic.Vertex · Anthropic.Foundry · Anthropic.Aws · Anthropic.GoogleCloud · Anthropic.Mcp</div>
+      <p>Each cloud client is a separate NuGet package and a <strong>subclass of <code>AnthropicClient</code></strong>, so <code>client.Messages.Create(...)</code> and the rest of the surface are unchanged. Internally, each one inserts an adaptation <code>DelegatingHandler</code> that rewrites URLs, moves <code>model</code> into the path where needed, signs requests, and strips first-party API keys so they never reach a third-party host.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>Package</th><th>Client</th><th>Construct with</th></tr></thead>
+        <tbody>
+          <tr><td><code>Anthropic.Bedrock</code></td><td><code>AnthropicBedrockMantleClient</code></td><td><code>new(new MantleAwsClientOptions { … })</code>. Preferred for new Bedrock code.</td></tr>
+          <tr><td><code>Anthropic.Bedrock</code></td><td><code>AnthropicBedrockClient</code></td><td><code>AnthropicBedrockCredentialsHelper.FromEnv()</code>. Legacy InvokeModel path.</td></tr>
+          <tr><td><code>Anthropic.Vertex</code></td><td><code>AnthropicVertexClient</code></td><td><code>DefaultAnthropicVertexCredentials.FromEnvAsync()</code></td></tr>
+          <tr><td><code>Anthropic.Foundry</code></td><td><code>AnthropicFoundryClient</code></td><td><code>new AnthropicFoundryApiKeyCredentials(key, resource)</code></td></tr>
+          <tr><td><code>Anthropic.Aws</code></td><td><code>AnthropicAwsClient</code></td><td><code>AwsClientOptions</code>. Claude Platform on AWS.</td></tr>
+          <tr><td><code>Anthropic.GoogleCloud</code></td><td><code>AnthropicGoogleCloudClient</code></td><td><code>GoogleCloudClientOptions</code>. Anthropic-managed models on Google Cloud.</td></tr>
+          <tr><td><code>Anthropic.Mcp</code></td><td><code>BetaMcp</code> (static)</td><td>Not a client; bridges MCP tools into the tool runner.</td></tr>
+        </tbody>
+      </table></div>
+      <pre><code class="language-csharp">using Anthropic.Vertex;
+
+var creds = await DefaultAnthropicVertexCredentials.FromEnvAsync()
+    ?? throw new InvalidOperationException("Set ANTHROPIC_VERTEX_PROJECT_ID");
+var client = new AnthropicVertexClient(creds);
+var response = await client.Messages.Create(parameters);   // same call as first-party</code></pre>
+    </section>
+
+    <section id="beta">
+      <h2>Stable vs Beta</h2>
+      <p>The SDK mirrors the API's split by name and namespace. Nothing is shared between the two type families, so the beta surface can change without touching stable code.</p>
+      <div class="tbl"><table>
+        <thead><tr><th></th><th>Stable</th><th>Beta</th></tr></thead>
+        <tbody>
+          <tr><td>Service</td><td><code>client.Messages</code></td><td><code>client.Beta.Messages</code></td></tr>
+          <tr><td>Namespace</td><td><code>Anthropic.Models.Messages</code></td><td><code>Anthropic.Models.Beta.Messages</code></td></tr>
+          <tr><td>Types</td><td><code>Message</code>, <code>UserMessageParam</code>, <code>Tool</code></td><td><code>BetaMessage</code>, <code>BetaUserMessageParam</code>, <code>BetaTool</code></td></tr>
+          <tr><td>Aggregator</td><td><code>MessageContentAggregator</code></td><td><code>BetaMessageContentAggregator</code></td></tr>
+          <tr><td>Beta flags</td><td>n/a</td><td><code>Betas = [AnthropicBeta.ServerSideFallback2026_07_01]</code></td></tr>
+        </tbody>
+      </table></div>
+      <p>The beta <code>MessageCreateParams</code> lives in <code>Anthropic.Models.Beta.Messages</code> and has the same name as the stable one. With both namespaces imported, alias one: <code>using Messages = Anthropic.Models.Messages;</code>. Helpers that only work on beta types (tool runner, threads, fallbacks, Managed Agents aggregators) carry the <code>Beta</code> prefix.</p>
+      <div class="note"><b>Where to look next.</b> <code>examples/</code> has a runnable project for each construct above (MessagesExample, StreamingAggregationExample, ToolRunnerExample, StructuredOutputExample, MessageThreadExample, FallbacksExample, ManagedAgentsExample, ChatClientExample, and the Bedrock / Vertex / Foundry variants). <code>CLAUDE.md</code> at the repo root explains the design rules behind them.</div>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+  try { if (window.hljs) hljs.highlightAll(); } catch (e) {}
+</script>
